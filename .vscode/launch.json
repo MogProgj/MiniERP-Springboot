@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot - MiniERP",
+      "request": "launch",
+      // Update mainClass once the Spring Boot application class is created
+      "mainClass": "com.minierp.MiniErpApplication",
+      "projectName": "minierp"
+    }
+  ]
+}
