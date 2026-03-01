@@ -1,6 +1,8 @@
 package com.mogproj.minierp.customer;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CustomerService {
@@ -18,6 +20,6 @@ public class CustomerService {
 
     public Customer findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Customer not found: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found: " + id));
     }
 }
