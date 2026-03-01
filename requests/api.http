@@ -1,5 +1,5 @@
 ### Health check
-GET http://localhost:8080/actuator/health
+GET http://localhost:8080/health
 
 ###
 
@@ -15,9 +15,6 @@ Content-Type: application/json
   "phone": "+1-555-0100"
 }
 
-### List customers
-GET http://localhost:8080/customers
-
 ### Get customer by ID
 GET http://localhost:8080/customers/1
 
@@ -32,61 +29,8 @@ Content-Type: application/json
 {
   "sku": "WIDGET-001",
   "name": "Standard Widget",
-  "priceCents": 1999,
-  "active": true
+  "priceCents": 1999
 }
 
-### List products
-GET http://localhost:8080/products
-
-### Update a product
-PATCH http://localhost:8080/products/1
-Content-Type: application/json
-
-{
-  "priceCents": 2499
-}
-
-###
-
-### --- Orders ---
-
-### Create an order
-POST http://localhost:8080/orders
-Content-Type: application/json
-
-{
-  "customerId": 1,
-  "status": "DRAFT"
-}
-
-### Add item to order
-POST http://localhost:8080/orders/1/items
-Content-Type: application/json
-
-{
-  "productId": 1,
-  "qty": 2,
-  "unitPriceCents": 1999
-}
-
-### Confirm an order
-POST http://localhost:8080/orders/1/confirm
-
-### List orders by status
-GET http://localhost:8080/orders?status=DRAFT
-
-###
-
-### --- Inventory ---
-
-### Get inventory
-GET http://localhost:8080/inventory
-
-### Adjust inventory
-POST http://localhost:8080/inventory/1/adjust
-Content-Type: application/json
-
-{
-  "adjustment": 50
-}
+### Get product by ID
+GET http://localhost:8080/products/1
