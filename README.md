@@ -1,5 +1,7 @@
 # MiniERP (Spring Boot)
 
+> **Status:** Public build started on 2026-03-01. This repo is being developed in public from MVP onward.
+
 MiniERP is a lightweight ERP-style backend that covers the core flow most small businesses actually need: customers, products, orders, and inventory. The goal is not to recreate enterprise Software (I enjoy sleep), but to build a clean, well-structured system that proves real backend skills: relational modeling, business rules, and a usable API.
 
 This repo is being built in public as a portfolio project.
@@ -35,7 +37,7 @@ If you don’t have Maven wrapper yet, you can create the project via Spring Ini
 ## Configuration
 The app will use environment variables or `application.yml` for DB connection. Example values:
 
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/minierp
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5433/minierp
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=postgres
 
