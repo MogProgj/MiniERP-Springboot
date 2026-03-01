@@ -1,0 +1,23 @@
+package com.mogproj.minierp.customer;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomerService {
+
+    private final CustomerRepository repository;
+
+    public CustomerService(CustomerRepository repository) {
+        this.repository = repository;
+    }
+
+    public Customer create(CreateCustomerRequest request) {
+        Customer customer = new Customer(request.name(), request.email(), request.phone());
+        return repository.save(customer);
+    }
+
+    public Customer findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Customer not found: " + id));
+    }
+}
