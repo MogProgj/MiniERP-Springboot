@@ -1,6 +1,7 @@
 package com.mogproj.minierp.auth;
 
 import com.mogproj.minierp.common.exception.DuplicateResourceException;
+import com.mogproj.minierp.common.exception.EntityNotFoundException;
 import com.mogproj.minierp.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +50,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + request.username()));
         String token = jwtService.generateToken(user);
         return new AuthResponse(token, user.getUsername(), user.getRole().name(),
                 jwtService.extractExpiry(token));

@@ -47,6 +47,10 @@ public class OrderService {
         }
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new EntityNotFoundException("Product", request.productId()));
+        if (!product.getActive()) {
+            throw new BusinessRuleException(
+                    "Cannot add inactive product " + product.getId() + " to order");
+        }
         order.addItem(new OrderItem(order, product, request.qty(), product.getPriceCents()));
         return orderRepository.save(order);
     }
@@ -76,7 +80,7 @@ public class OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Order", orderId));
         if (order.getStatus() == Order.Status.CONFIRMED) {
             for (OrderItem item : order.getItems()) {
-                inventoryRepository.findByProductId(item.getProduct().getId())
+                inventoryRepository.findByProductIdForUpdate(item.getProduct().getId())
                         .ifPresent(inv -> {
                             inv.adjustStock(item.getQty());
                             inventoryRepository.save(inv);

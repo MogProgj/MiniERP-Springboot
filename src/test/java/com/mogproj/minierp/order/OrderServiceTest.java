@@ -99,4 +99,19 @@ class OrderServiceTest {
         assertThatThrownBy(() -> service.confirmOrder(1L))
                 .isInstanceOf(InsufficientInventoryException.class);
     }
+
+    @Test
+    void addItem_toInactiveProduct_shouldThrow() {
+        var customer = CustomerFixture.alice();
+        var order = new Order(customer);
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
+
+        var product = ProductFixture.widget();
+        product.update(null, null, null, false);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        assertThatThrownBy(() -> service.addItem(1L, new AddOrderItemRequest(1L, 2)))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("inactive");
+    }
 }
