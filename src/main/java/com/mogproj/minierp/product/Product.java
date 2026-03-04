@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
     protected Product() {
     }
 
@@ -41,6 +44,14 @@ public class Product {
         this.priceCents = priceCents;
         this.active = true;
         this.createdAt = Instant.now();
+    }
+
+    public void update(String sku, String name, Integer priceCents, Boolean active) {
+        if (sku != null) this.sku = sku;
+        if (name != null) this.name = name;
+        if (priceCents != null) this.priceCents = priceCents;
+        if (active != null) this.active = active;
+        this.updatedAt = Instant.now();
     }
 
     public Long getId() {
@@ -65,5 +76,9 @@ public class Product {
 
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

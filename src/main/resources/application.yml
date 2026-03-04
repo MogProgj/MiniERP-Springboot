@@ -6,11 +6,41 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/minierp}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000
   jpa:
     hibernate:
       ddl-auto: validate
   flyway:
     enabled: true
+
+app:
+  security:
+    jwt:
+      # Dev-only default — override via APP_JWT_SECRET env var in production (Base64, min 256-bit)
+      secret: ${APP_JWT_SECRET:bXluaW5pZXJwandrZXlmb3JkZXZlbG9wbWVudG9ubHljaGFuZ2VpbnByb2Q=}
+      expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
 
 logging:
   level:
