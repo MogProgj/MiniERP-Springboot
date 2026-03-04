@@ -1,17 +1,18 @@
 package com.mogproj.minierp.customer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mogproj.minierp.common.exception.EntityNotFoundException;
 import com.mogproj.minierp.fixtures.CustomerFixture;
-import com.mogproj.minierp.security.JwtAuthFilter;
 import com.mogproj.minierp.security.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJson;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
+@AutoConfigureJson
 class CustomerControllerTest {
 
     @Autowired
@@ -31,14 +33,14 @@ class CustomerControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     CustomerService service;
 
-    @MockBean
+    @MockitoBean
     JwtService jwtService;
 
-    @MockBean
-    JwtAuthFilter jwtAuthFilter;
+    @MockitoBean
+    UserDetailsService userDetailsService;
 
     @Test
     @WithMockUser(roles = "ADMIN")
