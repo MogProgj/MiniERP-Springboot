@@ -50,7 +50,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new EntityNotFoundException("User with username: " + request.username() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + request.username()));
         String token = jwtService.generateToken(user);
         return new AuthResponse(token, user.getUsername(), user.getRole().name(),
                 jwtService.extractExpiry(token));
