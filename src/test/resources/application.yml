@@ -10,3 +10,9 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   flyway:
     enabled: false
+
+app:
+  security:
+    jwt:
+      secret: dGVzdC1vbmx5LXNlY3JldC1rZXktZm9yLXVuaXQtdGVzdHMtbWluaW1hbC0yNTZiaXQ=
+      expiration-ms: 86400000

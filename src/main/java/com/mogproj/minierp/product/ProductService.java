@@ -30,7 +30,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<Product> list(String nameFilter, String skuFilter, Boolean active, Pageable pageable) {
-        Specification<Product> spec = Specification.where(null);
+        Specification<Product> spec = Specification.where((Specification<Product>) null);
         if (nameFilter != null && !nameFilter.isBlank()) {
             spec = spec.and(ProductSpec.nameContains(nameFilter));
         }
