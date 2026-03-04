@@ -7,16 +7,18 @@ public class ProductSpec {
     private ProductSpec() {
     }
 
+    private static final char ESCAPE_CHAR = '\\';
+
     public static Specification<Product> nameContains(String name) {
         String escaped = escapeWildcards(name.toLowerCase());
         return (root, query, cb) ->
-                cb.like(cb.lower(root.get("name")), "%" + escaped + "%");
+                cb.like(cb.lower(root.get("name")), "%" + escaped + "%", ESCAPE_CHAR);
     }
 
     public static Specification<Product> skuContains(String sku) {
         String escaped = escapeWildcards(sku.toLowerCase());
         return (root, query, cb) ->
-                cb.like(cb.lower(root.get("sku")), "%" + escaped + "%");
+                cb.like(cb.lower(root.get("sku")), "%" + escaped + "%", ESCAPE_CHAR);
     }
 
     private static String escapeWildcards(String value) {
