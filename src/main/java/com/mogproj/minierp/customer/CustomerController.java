@@ -1,17 +1,17 @@
 package com.mogproj.minierp.customer;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.validation.Valid;
-
+@Tag(name = "Customers", description = "Customer management")
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -31,5 +31,23 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Customer findById(@PathVariable Long id) {
         return service.findById(id);
+    }
+
+    @GetMapping
+    public Page<Customer> list(@RequestParam(required = false) String name,
+                               Pageable pageable) {
+        return service.list(name, pageable);
+    }
+
+    @PatchMapping("/{id}")
+    public Customer update(@PathVariable Long id,
+                           @Valid @RequestBody UpdateCustomerRequest request) {
+        return service.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }
