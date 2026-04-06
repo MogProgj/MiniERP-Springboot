@@ -21,8 +21,8 @@ spring:
 app:
   security:
     jwt:
-      # Dev-only default — override via APP_JWT_SECRET env var in production (Base64, min 256-bit)
-      secret: ${APP_JWT_SECRET:bXluaW5pZXJwandrZXlmb3JkZXZlbG9wbWVudG9ubHljaGFuZ2VpbnByb2Q=}
+      # Local/dev default; production must set APP_JWT_SECRET via environment.
+      secret: ${APP_JWT_SECRET:bWluaWVyLWRldi1qd3Qtc2VjcmV0LWNvbmZpZ3VyZWQtbG9jYWxseQ==}
       expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
 
 management:

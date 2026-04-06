@@ -26,7 +26,7 @@ class InventoryServiceTest {
     InventoryService service;
 
     @Test
-    void adjustStock_positiveelta_shouldIncreaseQuantity() {
+    void adjustStock_positiveDelta_shouldIncreaseQuantity() {
         var product = ProductFixture.widget();
         var inventory = new Inventory(product, 10, 5);
         when(repository.findByProductIdForUpdate(1L)).thenReturn(Optional.of(inventory));
