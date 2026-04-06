@@ -44,8 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/orders/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/orders/**").hasAnyRole("ADMIN", "USER")
-                        .anyRequest().hasRole("ADMIN")
-                )
+                        .anyRequest().hasRole("ADMIN"))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -58,7 +57,8 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

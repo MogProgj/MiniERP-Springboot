@@ -19,6 +19,11 @@ MiniERP is a lightweight ERP backend built with Spring Boot. It provides authent
 - **Orders**: create orders, add items, and confirm with stock validation.
 - **Inventory**: stock tracking and adjustment flow used by order confirmation.
 
+## Documentation & Roadmap 🚀
+We are actively building MiniERP into a commercial-grade application.
+All project documentation, including the Product Roadmap, Backlog, System Architecture, Decisions (ADRs), and Database Schema, has been consolidated into a single document:
+- **[Project Documentation](docs/project-documentation.md)**
+
 ## Running locally
 1. Copy env template:
    ```bash
