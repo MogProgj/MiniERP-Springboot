@@ -21,7 +21,7 @@ Database schema → REST API → business rules (inventory checks) → tests →
 
 ## Quickstart (local)
 Prerequisites:
-Java 17+ and Docker.
+Java 25+ and Docker.
 
 1) Start the database
 docker compose up -d
