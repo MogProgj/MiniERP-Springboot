@@ -1,6 +1,11 @@
 logging:
   config: classpath:logback-spring.xml
 
+app:
+  security:
+    jwt:
+      secret: ${APP_JWT_SECRET}
+
 management:
   endpoint:
     health:
