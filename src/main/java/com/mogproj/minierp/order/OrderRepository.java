@@ -9,7 +9,12 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    @EntityGraph(attributePaths = {"items", "items.product", "customer"})
     Page<Order> findByStatus(Order.Status status, Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = {"items", "items.product", "customer"})
+    Page<Order> findAll(Pageable pageable);
 
     @EntityGraph(attributePaths = {"items", "items.product", "customer"})
     @Query("SELECT o FROM Order o WHERE o.id = :id")

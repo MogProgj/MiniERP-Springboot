@@ -32,7 +32,7 @@ public class OrderService {
 
     @Transactional
     public Order createDraft(CreateOrderRequest request) {
-        var customer = customerRepository.findById(request.customerId())
+        var customer = customerRepository.findActiveById(request.customerId())
                 .orElseThrow(() -> new EntityNotFoundException("Customer", request.customerId()));
         return orderRepository.save(new Order(customer));
     }
@@ -70,7 +70,11 @@ public class OrderService {
             inv.adjustStock(-item.getQty());
             inventoryRepository.save(inv);
         }
-        order.confirm();
+        try {
+            order.confirm();
+        } catch (IllegalStateException ex) {
+            throw new BusinessRuleException(ex.getMessage());
+        }
         return orderRepository.save(order);
     }
 
@@ -87,7 +91,11 @@ public class OrderService {
                         });
             }
         }
-        order.cancel();
+        try {
+            order.cancel();
+        } catch (IllegalStateException ex) {
+            throw new BusinessRuleException(ex.getMessage());
+        }
         return orderRepository.save(order);
     }
 

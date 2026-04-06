@@ -42,7 +42,7 @@ class OrderServiceTest {
     @Test
     void createDraft_whenCustomerExists_shouldReturnDraftOrder() {
         var customer = CustomerFixture.alice();
-        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
+        when(customerRepository.findActiveById(1L)).thenReturn(Optional.of(customer));
         var order = new Order(customer);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
@@ -53,9 +53,17 @@ class OrderServiceTest {
 
     @Test
     void createDraft_whenCustomerNotFound_shouldThrow() {
-        when(customerRepository.findById(99L)).thenReturn(Optional.empty());
+        when(customerRepository.findActiveById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.createDraft(new CreateOrderRequest(99L)))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void createDraft_whenCustomerSoftDeleted_shouldThrow() {
+        when(customerRepository.findActiveById(7L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.createDraft(new CreateOrderRequest(7L)))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
@@ -113,5 +121,29 @@ class OrderServiceTest {
         assertThatThrownBy(() -> service.addItem(1L, new AddOrderItemRequest(1L, 2)))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("inactive");
+    }
+
+    @Test
+    void confirmOrder_nonDraftOrder_shouldThrowBusinessRuleException() {
+        var customer = CustomerFixture.alice();
+        var order = new Order(customer);
+        order.confirm();
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
+
+        assertThatThrownBy(() -> service.confirmOrder(1L))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("DRAFT");
+    }
+
+    @Test
+    void cancelOrder_alreadyCancelled_shouldThrowBusinessRuleException() {
+        var customer = CustomerFixture.alice();
+        var order = new Order(customer);
+        order.cancel();
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
+
+        assertThatThrownBy(() -> service.cancelOrder(1L))
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessageContaining("already cancelled");
     }
 }
