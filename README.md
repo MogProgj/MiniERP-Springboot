@@ -23,6 +23,11 @@ Database schema → REST API → business rules (inventory checks) → tests →
 Prerequisites:
 Java 25+ and Docker.
 
+### Java Runtime Policy
+This project is intentionally locked to Java 25.
+Builds use Maven guardrails that fail fast on non-Java-25 runtimes.
+Do not downgrade Java settings in the build, CI, or Docker files.
+
 1) Start the database
 docker compose up -d
 

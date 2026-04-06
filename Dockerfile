@@ -2,13 +2,14 @@
 FROM eclipse-temurin:25-jdk-alpine AS builder
 WORKDIR /app
 
-# Install Maven (no wrapper in repo)
-RUN apk add --no-cache maven
-
+# Use Maven Wrapper so container builds use the same pinned Maven distribution as CI/local.
+COPY .mvn ./.mvn
+COPY mvnw ./
+RUN chmod +x mvnw
 COPY pom.xml ./
-RUN mvn dependency:go-offline -B
+RUN ./mvnw dependency:go-offline -B
 COPY src ./src
-RUN mvn -B -DskipTests package
+RUN ./mvnw -B -DskipTests package
 
 # Stage 2: Runtime (JRE only for smaller image)
 FROM eclipse-temurin:25-jre-alpine AS runtime
