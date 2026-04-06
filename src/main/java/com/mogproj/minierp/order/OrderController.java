@@ -22,35 +22,36 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createDraft(@Valid @RequestBody CreateOrderRequest request) {
+    public ResponseEntity<OrderResponse> createDraft(@Valid @RequestBody CreateOrderRequest request) {
         Order order = service.createDraft(request);
-        return ResponseEntity.created(URI.create("/orders/" + order.getId())).body(order);
+        OrderResponse response = OrderResponseMapper.toResponse(order);
+        return ResponseEntity.created(URI.create("/orders/" + response.id())).body(response);
     }
 
     @PostMapping("/{id}/items")
-    public Order addItem(@PathVariable Long id,
-                         @Valid @RequestBody AddOrderItemRequest request) {
-        return service.addItem(id, request);
+    public OrderResponse addItem(@PathVariable Long id,
+                                 @Valid @RequestBody AddOrderItemRequest request) {
+        return OrderResponseMapper.toResponse(service.addItem(id, request));
     }
 
     @PostMapping("/{id}/confirm")
-    public Order confirm(@PathVariable Long id) {
-        return service.confirmOrder(id);
+    public OrderResponse confirm(@PathVariable Long id) {
+        return OrderResponseMapper.toResponse(service.confirmOrder(id));
     }
 
     @PostMapping("/{id}/cancel")
-    public Order cancel(@PathVariable Long id) {
-        return service.cancelOrder(id);
+    public OrderResponse cancel(@PathVariable Long id) {
+        return OrderResponseMapper.toResponse(service.cancelOrder(id));
     }
 
     @GetMapping("/{id}")
-    public Order findById(@PathVariable Long id) {
-        return service.findById(id);
+    public OrderResponse findById(@PathVariable Long id) {
+        return OrderResponseMapper.toResponse(service.findById(id));
     }
 
     @GetMapping
-    public Page<Order> list(@RequestParam(required = false) Order.Status status,
-                            Pageable pageable) {
-        return service.list(status, pageable);
+    public Page<OrderResponse> list(@RequestParam(required = false) Order.Status status,
+                                    Pageable pageable) {
+        return service.list(status, pageable).map(OrderResponseMapper::toResponse);
     }
 }

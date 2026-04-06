@@ -22,28 +22,29 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> create(@Valid @RequestBody CreateProductRequest request) {
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody CreateProductRequest request) {
         Product product = service.create(request);
-        return ResponseEntity.created(URI.create("/products/" + product.getId())).body(product);
+        ProductResponse response = ProductResponseMapper.toResponse(product);
+        return ResponseEntity.created(URI.create("/products/" + response.id())).body(response);
     }
 
     @GetMapping("/{id}")
-    public Product findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ProductResponse findById(@PathVariable Long id) {
+        return ProductResponseMapper.toResponse(service.findById(id));
     }
 
     @GetMapping
-    public Page<Product> list(@RequestParam(required = false) String name,
-                              @RequestParam(required = false) String sku,
-                              @RequestParam(required = false) Boolean active,
-                              Pageable pageable) {
-        return service.list(name, sku, active, pageable);
+    public Page<ProductResponse> list(@RequestParam(required = false) String name,
+                                      @RequestParam(required = false) String sku,
+                                      @RequestParam(required = false) Boolean active,
+                                      Pageable pageable) {
+        return service.list(name, sku, active, pageable).map(ProductResponseMapper::toResponse);
     }
 
     @PatchMapping("/{id}")
-    public Product update(@PathVariable Long id,
-                          @Valid @RequestBody UpdateProductRequest request) {
-        return service.update(id, request);
+    public ProductResponse update(@PathVariable Long id,
+                                  @Valid @RequestBody UpdateProductRequest request) {
+        return ProductResponseMapper.toResponse(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")

@@ -23,26 +23,27 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> create(@Valid @RequestBody CreateCustomerRequest request) {
+    public ResponseEntity<CustomerResponse> create(@Valid @RequestBody CreateCustomerRequest request) {
         Customer customer = service.create(request);
-        return ResponseEntity.created(URI.create("/customers/" + customer.getId())).body(customer);
+        CustomerResponse response = CustomerResponseMapper.toResponse(customer);
+        return ResponseEntity.created(URI.create("/customers/" + response.id())).body(response);
     }
 
     @GetMapping("/{id}")
-    public Customer findById(@PathVariable Long id) {
-        return service.findById(id);
+    public CustomerResponse findById(@PathVariable Long id) {
+        return CustomerResponseMapper.toResponse(service.findById(id));
     }
 
     @GetMapping
-    public Page<Customer> list(@RequestParam(required = false) String name,
-                               Pageable pageable) {
-        return service.list(name, pageable);
+    public Page<CustomerResponse> list(@RequestParam(required = false) String name,
+                                       Pageable pageable) {
+        return service.list(name, pageable).map(CustomerResponseMapper::toResponse);
     }
 
     @PatchMapping("/{id}")
-    public Customer update(@PathVariable Long id,
-                           @Valid @RequestBody UpdateCustomerRequest request) {
-        return service.update(id, request);
+    public CustomerResponse update(@PathVariable Long id,
+                                   @Valid @RequestBody UpdateCustomerRequest request) {
+        return CustomerResponseMapper.toResponse(service.update(id, request));
     }
 
     @DeleteMapping("/{id}")

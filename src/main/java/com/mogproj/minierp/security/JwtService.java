@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,18 @@ public class JwtService {
 
     @Value("${app.security.jwt.expiration-ms}")
     private long expirationMs;
+
+    @PostConstruct
+    void validateConfiguration() {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("Missing required configuration: app.security.jwt.secret");
+        }
+        byte[] decoded = Decoders.BASE64.decode(secret);
+        if (decoded.length < 32) {
+            throw new IllegalStateException(
+                    "Invalid JWT secret: app.security.jwt.secret must be Base64 for at least 256 bits");
+        }
+    }
 
     private SecretKey signingKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));

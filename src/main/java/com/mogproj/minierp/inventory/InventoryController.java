@@ -18,13 +18,13 @@ public class InventoryController {
     }
 
     @GetMapping
-    public Page<Inventory> list(Pageable pageable) {
-        return service.list(pageable);
+    public Page<InventoryResponse> list(Pageable pageable) {
+        return service.list(pageable).map(InventoryResponseMapper::toResponse);
     }
 
     @PostMapping("/{productId}/adjust")
-    public Inventory adjust(@PathVariable Long productId,
-                            @Valid @RequestBody AdjustStockRequest request) {
-        return service.adjustStock(productId, request);
+    public InventoryResponse adjust(@PathVariable Long productId,
+                                    @Valid @RequestBody AdjustStockRequest request) {
+        return InventoryResponseMapper.toResponse(service.adjustStock(productId, request));
     }
 }
