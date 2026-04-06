@@ -1,101 +1,61 @@
 # MiniERP (Spring Boot)
 
-> **Status:** Public build started on 2026-03-01. This repo is being developed in public from MVP onward.
-
-MiniERP is a lightweight ERP-style backend that covers the core flow most small businesses actually need: customers, products, orders, and inventory. The goal is not to recreate enterprise Software (I enjoy sleep), but to build a clean, well-structured system that proves real backend skills: relational modeling, business rules, and a usable API.
-
-This repo is being built in public as a portfolio project.
-
-## What it does (target scope)
-MiniERP focuses on four modules:
-Customer management, product catalog, order processing, and inventory tracking.
-
-Once the MVP is complete, it will support a simple order lifecycle where confirming an order checks stock and deducts inventory.
+MiniERP is a lightweight ERP backend built with Spring Boot. It provides authentication plus core business modules for customers, products, orders, and inventory.
 
 ## Tech stack
-Java, Spring Boot, PostgreSQL, Docker, Flyway (DB migrations), JUnit (tests), Swagger/OpenAPI (API docs).
+- Java 17
+- Spring Boot 3.2.5
+- Spring Security + JWT (JJWT)
+- Spring Data JPA + PostgreSQL
+- Flyway migrations
+- Swagger / OpenAPI (springdoc)
+- Maven Wrapper (`./mvnw`)
+- Docker
 
-## Current status
-Planned build order:
-Database schema → REST API → business rules (inventory checks) → tests → small demo dataset.
+## Implemented modules
+- **Authentication**: login endpoint and JWT-based authorization.
+- **Customers**: create, list, retrieve, and soft-delete customers.
+- **Products**: create, list/filter, retrieve, and soft-delete products.
+- **Orders**: create orders, add items, and confirm with stock validation.
+- **Inventory**: stock tracking and adjustment flow used by order confirmation.
 
-## Quickstart (local)
-Prerequisites:
-Java 25+ and Docker.
+## Running locally
+1. Copy env template:
+   ```bash
+   cp .env.example .env
+   ```
+2. Start PostgreSQL:
+   ```bash
+   docker compose up -d
+   ```
+3. Run the API:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-### Java Runtime Policy
-This project is intentionally locked to Java 25.
-Builds use Maven guardrails that fail fast on non-Java-25 runtimes.
-Do not downgrade Java settings in the build, CI, or Docker files.
+## Test and verification
+```bash
+./mvnw -B test
+./mvnw -B verify
+```
 
-1) Start the database
-docker compose up -d
+## API and health URLs
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+- Health: http://localhost:8080/actuator/health
 
-2) Run the app
-./mvnw spring-boot:run
+## Environment variables
+Use `.env.example` as the tracked template and keep `.env` local-only.
 
-3) Open API docs
-http://localhost:8080/swagger-ui/index.html
+- `SPRING_DATASOURCE_URL` (default local: `jdbc:postgresql://localhost:5433/minierp`)
+- `SPRING_DATASOURCE_USERNAME` (default local: `postgres`)
+- `SPRING_DATASOURCE_PASSWORD` (default local: `postgres`)
+- `APP_JWT_SECRET` (required for token signing)
 
-If you don’t have Maven wrapper yet, you can create the project via Spring Initializr and commit the wrapper files with the initial code.
-
-## Configuration
-The app will use environment variables or `application.yml` for DB connection. Example values:
-
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5433/minierp
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=postgres
-
-## Core entities (MVP)
-Customers
-Products (SKU, name, price, active)
-Orders (status, createdAt)
-Order items (product, qty, unit price)
-Inventory (quantity on hand, reorder point)
-
-Optional but likely:
-Stock movements (so inventory changes are traceable instead of “magic numbers”).
-
-## API overview (planned)
-Customers
-POST /customers
-GET /customers
-GET /customers/{id}
-
-Products
-POST /products
-GET /products
-PATCH /products/{id}
-
-Orders
-POST /orders
-POST /orders/{id}/items
-POST /orders/{id}/confirm
-GET /orders?status=
-
-Inventory
-GET /inventory
-POST /inventory/{productId}/adjust
-
-## Project structure (planned)
-src/main/java/.../
-controller/
-service/
-repository/
-model/
-src/main/resources/
-application.yml
-db/migration/ (Flyway SQL migrations)
-
-## Roadmap
-- [ ] Define schema + migrations (Flyway)
-- [ ] Implement CRUD for customers and products
-- [ ] Implement order creation + order items
-- [ ] Implement order confirmation with inventory checks
-- [ ] Add test coverage for business rules
-- [ ] Add seed data for instant demo
-- [ ] Add basic auth (optional)
-
+## Docker build
+```bash
+docker build -t minierp:local .
+```
 
 ## License
 MIT
